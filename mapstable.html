@@ -1,7 +1,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>Upper Arlington Draft</title>
+        <title>Downtown Syracuse draft</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <link
@@ -124,7 +124,7 @@
             background-color: white;
             vertical-align: middle;
             padding-bottom: 0;
-            flex-wrap: nowrap;
+            text-wrap: nowrap;
         }
 
     </style>
@@ -136,15 +136,15 @@
             <option value="tracts-pctCostBurdenedRenters">Percent of Renters, Cost Burdened</option> 
             <option value="tracts-pctCostBurdenedOwners">Percent of Homeowners, Cost Burdened</option> 
             <option value="tracts-pctHH">Percent Change in Households (2010-2023)</option>
-            <option value="tracts-layer">Upper Arlington</option>
+            <option value="tracts-layer">Downtown Syracuse</option>
         </select>
             <div id="medIncomeLegend" class="legend" style="display: block;">
                     <h4>Median Annual Household Income (2023, USD)</h4>
-                    <div><span style="background-color: #980043"></span>$240,000 or more</div>
+                    <div><span style="background-color: #980043"></span>$124,000 or more</div>
                     <div><span style="background-color: #dd1c77"></span></div>
                     <div><span style="background-color: #df65b0"></span></div>
                     <div><span style="background-color: #d7b5d8"></span></div>
-                    <div><span style="background-color: #f1eef6"></span>$45,000 or less</div>
+                    <div><span style="background-color: #f1eef6"></span>$28,000 or less</div>
                     <div><span style="background-color: #425A7030"></span>No data</div>
                 </div>
             <div id="cbRentersLegend" class="legend" style="display: none;">
@@ -180,10 +180,10 @@
 </div>
 
 <script>
-    const INITIAL_LOC = [-83.08, 40.03]
-    const INITIAL_ZOOM = 11.9 //set initial zoom (zoom levels 9-12 best for cities depending on size)
+    const INITIAL_LOC = [-76.15, 43.05]
+    const INITIAL_ZOOM = 13 //set initial zoom (zoom levels 9-12 best for cities depending on size)
     const communityScaleGray = "#425A70"
-    const placeOfInterest = "Upper Arlington"
+    const placeOfInterest = "Downtown Syracuse"
     const medIncomePalette = [ //Sequential colorBrewer Purple/Red ramp
                 '#f1eef6',
                 '#d7b5d8',
@@ -236,20 +236,21 @@
 
     map.on("load", () => {      
         map.addSource("tracts", {
-            type: "geojson",
-            data: "https://raw.githubusercontent.com/emtzot/mapSources/main/ohioTracts",
-            promoteId: "GEOID"
+            type: "vector",
+            url: "mapbox://emtzot01.6uwng8ej",
+            promoteId: "GEOID2"
             })
         
         map.addSource((placeOfInterest + "-layer"), {    
             type: "geojson",
-            data: "https://raw.githubusercontent.com/emtzot/mapSources/3a42a8dcae81708b41bddbb8527424490e670d8f/ohioPlacesCensus2020.geojson"
+            data: "https://raw.githubusercontent.com/emtzot/mapSources/main/downtownSyracuseBoundary.geojson"
         })
 
         map.addLayer({
             id: "tracts-layer",  
             type: "fill",
             source: "tracts",
+            'source-layer': "nysTractsA-7tssz0",
             paint: {
                 'fill-color': communityScaleGray,
                 "fill-opacity": 0.6,
@@ -274,21 +275,22 @@
             id: "tracts-medIncome",  
             type: "fill",
             source: "tracts",
+            'source-layer': "nysTractsA-7tssz0",
             paint: {
                 "fill-color": [
                     "case", ["==", ["get", "medIncome"], null], communityScaleGray,
                     ["interpolate", 
                     ["linear"],
                     ["get", "medIncome"],
-                    45000,
+                    28000,
                     medIncomePalette[0], 
-                    80000,
+                    55000,
                     medIncomePalette[1],
-                    130000,
+                    76000,
                     medIncomePalette[2],
-                    180000,
+                    100000,
                     medIncomePalette[3],
-                    240000,
+                    124000,
                     medIncomePalette[4]]],
                 "fill-outline-color": "white",
                 "fill-opacity": [
@@ -312,21 +314,22 @@
             id: "tracts-pctCostBurdenedRenters",  
             type: "fill",
             source: "tracts",
+            'source-layer': "nysTractsA-7tssz0",
             paint: {
                 "fill-color": [
                     "case", ["==", ["get", "pctRent30"], null], communityScaleGray,
                     ["interpolate", 
                     ["linear"],
                     ["get", "pctRent30"],
-                    0,
+                    0.1,
                     cbRentersPalette[0], 
-                    15,
+                    0.29,
                     cbRentersPalette[1],
-                    30,
+                    0.42,
                     cbRentersPalette[2],
-                    45,
+                    0.55,
                     cbRentersPalette[3],
-                    70,
+                    0.70,
                     cbRentersPalette[4]]],
                 "fill-outline-color": "white",
                 "fill-opacity": [
@@ -351,6 +354,7 @@
             id: "tracts-pctCostBurdenedOwners",  
             type: "fill",
             source: "tracts",
+            'source-layer': "nysTractsA-7tssz0",
             paint: {
                 "fill-color": [
                     "case", ["==", ["get", "pctOwned30"], null], communityScaleGray,
@@ -359,13 +363,13 @@
                     ["get", "pctOwned30"],
                     0,
                     cbOwnersPalette[0],
-                    15,
+                    0.10,
                     cbOwnersPalette[1], 
-                    30,
+                    0.15,
                     cbOwnersPalette[2],
-                    45,
+                    0.25,
                     cbOwnersPalette[3],
-                    70,
+                    0.40,
                     cbOwnersPalette[4],
                 ]],
                 "fill-outline-color": "white",
@@ -391,30 +395,31 @@
             id: "tracts-pctHH",  
             type: "fill",
             source: "tracts",
+            'source-layer': "nysTractsA-7tssz0",
             paint: {
                 "fill-color": [
-                    "case", ["==", ["get", "pctChangeHH"], null], communityScaleGray,
+                    "case", ["==", ["get", "pctChangeH"], null], communityScaleGray,
                     ["interpolate",
                     ["linear"],
-                    ["get", "pctChangeHH"],
-                    -30,
+                    ["get", "pctChangeH"],
+                    -0.30,
                     hhChangePalette[0],
-                    -15, 
+                    -0.15, 
                     hhChangePalette[1],
-                    -5,
+                    -0.05,
                     hhChangePalette[2],
                     0,
                     hhChangePalette[3], 
-                    10,
+                    0.10,
                     hhChangePalette[4],
-                    25,
+                    0.25,
                     hhChangePalette[5],
-                    55,
+                    0.55,
                     hhChangePalette[6]
                 ]],
                 "fill-outline-color": "white",
                 "fill-opacity": [
-                    "case", ["==", ["get", "pctChangeHH"], null], 0.3,
+                    "case", ["==", ["get", "pctChangeH"], null], 0.3,
                     ["case",
                     ["boolean", ["feature-state", "hover"], false],
                     0.95,
@@ -470,7 +475,7 @@
             .setHTML(`
                 <div class="mapboxgl-popup">
                 <div class="mapboxgl-popup-close-button">x</div>
-                <div class="mapboxgl-popup-header">${selectedTract.properties.NAMELSAD}</div>
+                <div class="mapboxgl-popup-header">${selectedTract.properties.NAME}</div>
                 <div class="mapboxgl-popup-content">${displayIncome}
                 </div>
             </div>`)
@@ -488,7 +493,7 @@
             .setLngLat(selectedTract.geometry.coordinates[0][0]) 
             .setHTML(`<div class="mapboxgl-popup">
                 <div class="mapboxgl-popup-close-button">x</div>
-                <div class="mapboxgl-popup-header">${selectedTract.properties.NAMELSAD}</div>
+                <div class="mapboxgl-popup-header">${selectedTract.properties.NAME}</div>
             </div>`)
             .addTo(map)
     }});
@@ -501,15 +506,15 @@
 
         if (selectedTract) {
             const pctRent30 = selectedTract.properties.pctRent30;
-            const roundedPctRent30 = Math.round(pctRent30 * 10) / 10
-            const displayPctRent30 = pctRent30 === null || pctRent30 === undefined ? 'No available data' : `${roundedPctRent30}% of renters in ${selectedTract.properties.NAMELSAD} spend more than 30% of income on housing costs.`;
+            const roundedPctRent30 = Math.round(pctRent30 * 1000) / 10
+            const displayPctRent30 = pctRent30 === null || pctRent30 === undefined ? 'No available data' : `${roundedPctRent30}% of renters in ${selectedTract.properties.NAME} spend more than 30% of income on housing costs.`;
 
             new mapboxgl.Popup({ closeButton: true }, { clickToClose: true })
             .setLngLat(selectedTract.geometry.coordinates[0][0])
             .setHTML(`
                 <div class="mapboxgl-popup">
                 <div class="mapboxgl-popup-close-button">x</div>
-                <div class="mapboxgl-popup-header">${selectedTract.properties.NAMELSAD}</div>
+                <div class="mapboxgl-popup-header">${selectedTract.properties.NAME}</div>
                 <div class="mapboxgl-popup-content">${displayPctRent30}
                 </div>
             </div>`)
@@ -523,15 +528,15 @@
 
         if (selectedTract) {
             const pctOwned30 = selectedTract.properties.pctOwned30;
-            const roundedPctOwned30 = Math.round(pctOwned30 * 10) / 10
-            const displayPctOwned30 = pctOwned30 === null || pctOwned30 === undefined ? 'No available data' : `${roundedPctOwned30}% of homeowners in ${selectedTract.properties.NAMELSAD} spend more than 30% of income on housing costs.`;
+            const roundedPctOwned30 = Math.round(pctOwned30 * 1000) / 10
+            const displayPctOwned30 = pctOwned30 === null || pctOwned30 === undefined ? 'No available data' : `${roundedPctOwned30}% of homeowners in ${selectedTract.properties.NAME} spend more than 30% of income on housing costs.`;
 
             new mapboxgl.Popup({ closeButton: true }, { clickToClose: true })
             .setLngLat(selectedTract.geometry.coordinates[0][0])
             .setHTML(`
                 <div class="mapboxgl-popup">
                 <div class="mapboxgl-popup-close-button">x</div>
-                <div class="mapboxgl-popup-header">${selectedTract.properties.NAMELSAD}</div>
+                <div class="mapboxgl-popup-header">${selectedTract.properties.NAME}</div>
                 <div class="mapboxgl-popup-content">${displayPctOwned30}
                 </div>
             </div>`)
@@ -544,16 +549,16 @@
         });
 
         if (selectedTract) {
-            const pctChangeHH = selectedTract.properties.pctChangeHH;
-            const roundedPctChangeHH = Math.round(pctChangeHH * 10) / 10
-            const displayPctChangeHH = pctChangeHH === null || pctChangeHH === undefined ? 'No available data' : `${selectedTract.properties.NAMELSAD} saw a ${roundedPctChangeHH}% change in the number of households (2010-2023).`;
+            const pctChangeHH = selectedTract.properties.pctChangeH;
+            const roundedPctChangeHH = Math.round(pctChangeHH * 1000) / 10
+            const displayPctChangeHH = pctChangeHH === null || pctChangeHH === undefined ? 'No available data' : `${selectedTract.properties.NAME} saw a ${roundedPctChangeHH}% change in the number of households (2010-2023).`;
 
             new mapboxgl.Popup({ closeButton: true }, { clickToClose: true })
             .setLngLat(selectedTract.geometry.coordinates[0][0])
             .setHTML(`
                 <div class="mapboxgl-popup">
                 <div class="mapboxgl-popup-close-button">x</div>
-                <div class="mapboxgl-popup-header">${selectedTract.properties.NAMELSAD}</div>
+                <div class="mapboxgl-popup-header">${selectedTract.properties.NAME}</div>
                 <div class="mapboxgl-popup-content">${displayPctChangeHH}
                 </div>
             </div>`)
