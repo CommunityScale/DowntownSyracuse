@@ -337,6 +337,10 @@ Table of contents
 /* For devices larger than 750px */
 @media (min-width: 750px) {
 
+  h3 {
+    margin-top: 0.75rem;
+  }
+
   .desktop-pages {
     display: flex;
   }
